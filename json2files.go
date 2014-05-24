@@ -51,7 +51,7 @@ func main() {
 			log.Fatal(err)
 		}
 
-		outJSON, err := json.MarshalIndent(jsd, "", " ")
+		outJSON, err := json.MarshalIndent(jsd, "", "  ")
 		if err != nil {
 			log.Fatal(err)
 		}
