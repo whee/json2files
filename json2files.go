@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"strings"
 	"text/template"
 )
 
@@ -19,6 +20,16 @@ func tmplFilename(t *template.Template, jsd JSONData) (string, error) {
 		return "", err
 	}
 	return fnBuf.String(), nil
+}
+
+var rmSpaces = strings.NewReplacer(" ", "")
+
+func rmKeySpaces(m JSONData) JSONData {
+	nm := make(JSONData)
+	for k, v := range m {
+		nm[rmSpaces.Replace(k)] = v
+	}
+	return nm
 }
 
 func main() {
@@ -41,7 +52,11 @@ func main() {
 			log.Fatal(err)
 		}
 
-		fn, err := tmplFilename(tmpl, jsd)
+		// Populate the template with a version of the JSON where keys
+		// have no spaces. Otherwise, there's no way to represent these
+		// columns in the template.
+		noSpaceJsd := rmKeySpaces(jsd)
+		fn, err := tmplFilename(tmpl, noSpaceJsd)
 		if err != nil {
 			log.Fatal(err)
 		}
