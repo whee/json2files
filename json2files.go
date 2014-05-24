@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -49,6 +50,9 @@ func main() {
 	for {
 		var jsd JSONData
 		if err := dec.Decode(&jsd); err != nil {
+			if err == io.EOF {
+				break
+			}
 			log.Fatal(err)
 		}
 
